@@ -1,13 +1,18 @@
+
 const mongoose = require("mongoose");
-const URL = "mongodb://127.0.0.1:27017/we_cart?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.10.0/";
 
+const dbConnect = async () => {
+  try {
+    if (!process.env.MONGO_URI) {
+      throw new Error("MONGO_URI is missing");
+    }
 
-const dbConnect = () => {
-  mongoose.connect(URL)
-    .then(() => console.log("Connected to MongoDB"))
-    .catch((err) => console.log(err));
-}
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to MongoDB");
+  } catch (err) {
+    console.error("MongoDB connection failed:", err.message);
+    process.exit(1);
+  }
+};
 
-
-module.exports = dbConnect
-
+module.exports = dbConnect;
